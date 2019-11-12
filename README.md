@@ -33,6 +33,11 @@ config.json file content example:
             "error",
             "warn",
             "debug"
+        ],
+        "logtypes": [
+            "log",
+            "httpstatus",
+            "metric"
         ]
     },
     "actions": {
