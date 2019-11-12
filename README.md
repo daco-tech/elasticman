@@ -18,10 +18,36 @@ config.json file content example:
 ```
 {
     "elasticsearch": {
-        "host": "http://<elasticsearch_server>:9200"
+        "host": "http://<server>:9200",
+        "required_status": "green",
+        "max_number_of_pending_tasks": 0
     },
     "log": {
         "verbose": true
+    },
+    "parser": {
+        "date_format": "YYYY.MM.DD",
+        "date_index_last_chars": 10,
+        "loglevels": [
+            "info",
+            "error",
+            "warn",
+            "debug"
+        ]
+    },
+    "actions": {
+        "delete": [
+            {
+                "loglevel": "info",
+                "keep-days": 10
+            },
+            {
+                "loglevel": "warn",
+                "keep-days": 20
+            }
+        ]
     }
 }
 ```
+
+This configuration works with indexes with name like "app-java-log-warn-2013.09.20" where the date_index_last_chars are the last 10 chars of this index.
