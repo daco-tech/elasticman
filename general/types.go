@@ -15,6 +15,7 @@ type Config struct {
 		DateFormat         string   `json:"date_format"`
 		DateIndexLastChars int      `json:"date_index_last_chars"`
 		Loglevels          []string `json:"loglevels"`
+		Logtypes           []string `json:"logtypes"`
 	} `json:"parser"`
 	Actions struct {
 		Delete []struct {
@@ -43,17 +44,19 @@ type Cluster struct {
 }
 
 type Index struct {
-	Health         string `json:"health"`
-	Status         string `json:"status"`
-	Name           string `json:"index"`
-	UUID           string `json:"uuid"`
-	Pri            string `json:"pri"`
-	Rep            string `json:"rep"`
-	DocsCount      string `json:"docs.count"`
-	DocsDeleted    string `json:"docs.deleted"`
-	StoreSize      string `json:"store.size"`
-	PriStoreSize   string `json:"pri.store.size"`
-	ParsedLogLevel string
-	ParsedDate     time.Time
-	ParseErrors    bool
+	Health          string `json:"health"`
+	Status          string `json:"status"`
+	Name            string `json:"index"`
+	UUID            string `json:"uuid"`
+	Pri             string `json:"pri"`
+	Rep             string `json:"rep"`
+	DocsCount       string `json:"docs.count"`
+	DocsDeleted     string `json:"docs.deleted"`
+	StoreSize       string `json:"store.size"`
+	PriStoreSize    string `json:"pri.store.size"`
+	ParsedLogLevel  string
+	ParsedLogType   string
+	ParsedDate      time.Time
+	ParseErrors     bool
+	ExistenceInDays int
 }
