@@ -29,10 +29,14 @@ config.json file content example:
         "date_format": "YYYY.MM.DD",
         "date_index_last_chars": 10,
         "loglevels": [
+            "debug",
+            "trace",
+            "verbose",
             "info",
-            "error",
             "warn",
-            "debug"
+            "warning",
+            "error",
+            "critical"
         ],
         "logtypes": [
             "log",
@@ -41,18 +45,47 @@ config.json file content example:
         ]
     },
     "actions": {
-        "delete": [
-            {
-                "loglevel": "info",
-                "keep-days": 10
-            },
-            {
-                "loglevel": "warn",
-                "keep-days": 20
-            }
-        ]
+        "delete": {
+            "enabled": true,
+            "dry_run": true,
+            "todo": [
+                {
+                    "loglevel": "debug",
+                    "keep-days": 2
+                },
+                {
+                    "loglevel": "trace",
+                    "keep-days": 2
+                },
+                {
+                    "loglevel": "verbose",
+                    "keep-days": 2
+                },
+                {
+                    "loglevel": "info",
+                    "keep-days": 7,
+                    "logtype": "log"
+                },
+                {
+                    "loglevel": "warn",
+                    "keep-days": 14
+                },
+                {
+                    "loglevel": "warning",
+                    "keep-days": 14
+                },
+                {
+                    "loglevel": "critical",
+                    "keep-days": 60
+                },
+                {
+                    "loglevel": "error",
+                    "keep-days": 60
+                }
+            ]
+        }
     }
 }
 ```
 
-This configuration works with indexes with name like "app-java-log-warn-2013.09.20" where the date_index_last_chars are the last 10 chars of this index.
+This configuration works with indexes with name like "app-example-log-warn-2013.09.20" where the date_index_last_chars are the last 10 chars of this index.

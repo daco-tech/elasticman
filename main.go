@@ -5,7 +5,6 @@ import (
 	"elasticman/general"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/urfave/cli"
 )
@@ -51,12 +50,11 @@ func setup() {
 
 func action(config general.Config) {
 
-	var parsed_indices, err = elastic.GetParsedIndices(config.Elasticsearch.Host, config.Log.Verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes)
-
-	if err == "" {
-		log.Println(parsed_indices[0].Name + " With Size " + parsed_indices[0].StoreSize + " Days: " + strconv.Itoa(parsed_indices[0].ExistenceInDays) + " with loglevel: " + parsed_indices[0].ParsedLogLevel)
-	} else {
-		log.Fatalln("Error geting indexes: " + err)
+	var parsed_indices, _ = elastic.GetParsedIndices(config.Elasticsearch.Host, config.Log.Verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes)
+	if config.Actions.Delete.Enabled {
+		for _, deletions := range config.Actions.Delete.Todo {
+			elastic.DeleteByDays(config.Elasticsearch.Host, config.Actions.Delete.DryRun, parsed_indices, deletions.KeepDays, deletions.Logtype, deletions.Loglevel, config.Log.Verbose)
+		}
 
 	}
 

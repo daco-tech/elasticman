@@ -2,9 +2,11 @@ package elastic
 
 import (
 	"elasticman/general"
+	types "elasticman/general"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func DeleteIndex(endpoint string, index string, verbose bool) bool {
@@ -41,6 +43,33 @@ func DeleteIndex(endpoint string, index string, verbose bool) bool {
 			log.Println("response Headers : ", resp.Header)
 			log.Println("response Body : ", string(respBody))
 		}
+	}
+	return false
+}
+
+func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, days int, logtype string, loglevel string, verbose bool) bool {
+	for _, index := range parsedIndices {
+		if !index.ParseErrors {
+			var delete int = 0
+			if loglevel != "" && loglevel == index.ParsedLogLevel {
+				delete++
+			}
+			if (logtype != "" && logtype == index.ParsedLogType) || logtype == "" {
+				delete++
+			}
+			if index.ExistenceInDays >= days {
+				delete++
+			}
+			if delete == 3 {
+				if !dryrun {
+					DeleteIndex(endpoint, index.Name, verbose)
+					log.Println("Index with name '" + index.Name + "' has been deleted since it has " + strconv.Itoa(index.ExistenceInDays) + " days and logtype/loglevel '" + index.ParsedLogType + "'/'" + index.ParsedLogLevel + "'.")
+				} else {
+					log.Println("*** DRY RUN *** - Index with name '" + index.Name + "' could been deleted since it has " + strconv.Itoa(index.ExistenceInDays) + " days and logtype/loglevel '" + index.ParsedLogType + "'/'" + index.ParsedLogLevel + "'.")
+				}
+			}
+		}
+
 	}
 	return false
 }

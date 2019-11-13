@@ -18,9 +18,14 @@ type Config struct {
 		Logtypes           []string `json:"logtypes"`
 	} `json:"parser"`
 	Actions struct {
-		Delete []struct {
-			Loglevel string `json:"loglevel"`
-			KeepDays int    `json:"keep-days"`
+		Delete struct {
+			Enabled bool `json:"enabled"`
+			DryRun  bool `json:"dry_run"`
+			Todo    []struct {
+				Loglevel string `json:"loglevel"`
+				KeepDays int    `json:"keep-days"`
+				Logtype  string `json:"logtype,omitempty"`
+			} `json:"todo"`
 		} `json:"delete"`
 	} `json:"actions"`
 }
