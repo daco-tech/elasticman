@@ -48,7 +48,7 @@ func DeleteIndex(endpoint string, index string, verbose bool) bool {
 }
 
 func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, days int, logtype string, loglevel string, verbose bool) {
-	var deletedIndexes int = 0
+	var deletedIndices int = 0
 	var possibleDeletions int = 0
 	for _, index := range parsedIndices {
 		if !index.ParseErrors {
@@ -65,7 +65,7 @@ func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, day
 			if delete == 3 {
 				if !dryrun {
 					DeleteIndex(endpoint, index.Name, verbose)
-					deletedIndexes++
+					deletedIndices++
 					log.Println("Index with name '" + index.Name + "' has been deleted since it has " + strconv.Itoa(index.ExistenceInDays) + " days and logtype/loglevel '" + index.ParsedLogType + "'/'" + index.ParsedLogLevel + "'.")
 				} else {
 					possibleDeletions++
@@ -74,8 +74,8 @@ func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, day
 			}
 		}
 	}
-	if deletedIndexes > 0 {
-		log.Println("Deleted Indexes (" + loglevel + "): " + strconv.Itoa(deletedIndexes))
+	if deletedIndices > 0 {
+		log.Println("Deleted Indexes (" + loglevel + "): " + strconv.Itoa(deletedIndices))
 	} else {
 		var text = "Nothing deleted (" + loglevel + ")!"
 		if dryrun {
