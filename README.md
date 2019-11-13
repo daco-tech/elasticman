@@ -92,8 +92,9 @@ This configuration works with indexes with name like "app-example-log-warn-2013.
 
 ## Actions
 
-### DELETE MULTIPLE INDICES
+### DELETE 
 
+#### DELETE MULTIPLE INDICES
 Usage: elasticman --delete yes
 
 This command deletes indices according with the configuration defined in the actions -> delete section. 
