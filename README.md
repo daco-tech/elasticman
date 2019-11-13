@@ -1,11 +1,14 @@
 # ElasticMan - Elastic Maintenance Tool
 
-This is a simple Go program to do the ElasticSearch Log files maintenance.
+This is a simple tool to maintain the ElasticSearch Log indices.
 
-The objective to this project is to create a tool with enough flexibility to clean, consolidate and organize ElasticSearch indices.
+The main objective of this project is to create a tool with enough flexibility to clean, consolidate and organize ElasticSearch indices easily.
+
+This tool does not compete with ElasticSearch Curator that is a more complete and maintained tool, but it is a tool that you can keep on your laptop or even in a docker container with very low hardware resources usage.
 
 ## Getting started
 
+### From Source
 * Make sure you have [dep](https://github.com/golang/dep) installed
 * Clone this repo `git clone https://github.com/daco-tech/elasticman.git`
 * Create a configuration file with name: config.json at main.go file level with the text in the config section
