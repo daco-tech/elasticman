@@ -23,7 +23,7 @@ func main() {
 		cli.StringFlag{
 			Name:  "delete",
 			Value: "no",
-			Usage: "set --delete yes to activate the Delete Option",
+			Usage: "'--delete yes' to activate the Delete Option. '--delete indexname' to delete a single index.",
 		},
 	}
 
@@ -60,10 +60,23 @@ func main() {
 		}
 		var do_something bool = false
 		//Run Actions
-		if c.String("delete") == "yes" {
-			log.Println("DELETE MODE ACTIVATED")
-			do_something = true
-			deleteAction(config)
+		if c.String("delete") != "" {
+			if c.String("delete") == "yes" {
+				log.Println("DELETE INDICES MODE ACTIVATED")
+				do_something = true
+				deleteAction(config)
+			} else {
+				log.Println("DELETE SINGLE INDEX MODE ACTIVATED")
+				do_something = true
+				var result = elastic.DeleteIndex(config.Elasticsearch.Host, c.String("delete"), config.Log.Verbose)
+				if result {
+					log.Println("Index with name '" + c.String("delete") + "' deleted!")
+				} else {
+					log.Println("Index with name '" + c.String("delete") + "' NOT deleted! Check log.")
+				}
+
+			}
+
 		}
 
 		//If nothing runs say something

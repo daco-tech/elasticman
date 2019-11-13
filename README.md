@@ -92,7 +92,7 @@ This configuration works with indexes with name like "app-example-log-warn-2013.
 
 ## Actions
 
-### DELETE
+### DELETE MULTIPLE INDICES
 
 Usage: elasticman --delete yes
 
@@ -105,3 +105,10 @@ Once you test the configuration file, you are able to schedule in a cron job the
 Be aware that the indices date should be in the end of their name and should respect a valid pattern (example 'app-example-log-warn-2013.09.20').
 
 If some of your indices has a non pattern based name (like '.kibana' or 'logstash'), this tool ignores it. If you enable the log verbose option (config file), you will see that indices being (example: '2019/11/11 00:01:02 Index Date not parsed for index (258): .kibana_1').
+
+#### DELETE SINGLE INDEX
+[!WARNING] This option ignores Dry Run since the user have to specify the index to be deleted.
+
+Usage: elasticman --delete <index_name>
+
+This option deletes the index with the defined name. It is the same as doing the curl to the API: 'curl -X DELETE "host:9200/<index_name>"'
