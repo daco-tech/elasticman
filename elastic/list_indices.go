@@ -65,7 +65,6 @@ func GetIndices(endpoint string, verbose bool) ([]types.Index, string) {
 func GetParsedIndices(endpoint string, verbose bool, dateformat string, date_last_no_of_chars int, loglevels []string, logtypes []string) (parsed_indices []types.Index, err string) {
 	var indices, getErr = GetIndices(endpoint, verbose)
 	parsed_indices = []types.Index{}
-	log.Println("GetParsedIndices")
 	if getErr == "" {
 		for i, index := range indices {
 			var indexMod = indices[i]
