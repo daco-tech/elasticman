@@ -111,4 +111,4 @@ If some of your indices has a non pattern based name (like '.kibana' or 'logstas
 
 Usage: elasticman --delete <index_name>
 
-This option deletes the index with the defined name. It is the same as doing the curl to the API: 'curl -X DELETE "host:9200/<index_name>"'
+This option deletes the index with the defined name. It is the same as running the curl to the API: 'curl -X DELETE "host:9200/<index_name>"'
