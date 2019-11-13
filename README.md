@@ -89,3 +89,19 @@ config.json file content example:
 ```
 
 This configuration works with indexes with name like "app-example-log-warn-2013.09.20" where the date_index_last_chars are the last 10 chars of this index.
+
+## Actions
+
+### DELETE
+
+Usage: elasticman --delete yes
+
+This command deletes indices according with the configuration defined in the actions -> delete section. 
+
+This tool can be tested without delete indices if the  "dry_run" option is set to true in the configuration file.
+
+Once you test the configuration file, you are able to schedule in a cron job the automatic execution of this cleanup tool to keep your elastic search indices clean (ideal for logs).
+
+Be aware that the indices date should be in the end of their name and should respect a valid pattern (example 'app-example-log-warn-2013.09.20').
+
+If some of your indices has a non pattern based name (like '.kibana' or 'logstash'), this tool ignores it. If you enable the log verbose option (config file), you will see that indices being (example: '2019/11/11 00:01:02 Index Date not parsed for index (258): .kibana_1').
