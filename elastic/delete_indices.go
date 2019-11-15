@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// This function is used to delete indexes by providing the elastic endpoint and the index name.
+// DeleteIndex function is used to delete indexes by providing the elastic endpoint and the index name.
 // Set verbose true if you want more output details.
 func DeleteIndex(endpoint string, index string, verbose bool) bool {
 
@@ -49,7 +49,7 @@ func DeleteIndex(endpoint string, index string, verbose bool) bool {
 	return false
 }
 
-// This function is used to delete indexes by days. This function also provides a dry run option.
+// DeleteByDays function is used to delete indexes by days. This function also provides a dry run option.
 // It uses a list of indexes provided by the GetParsedIndices function.
 // Set verbose true if you want more output details.
 func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, days int, logtype string, loglevel string, verbose bool) {

@@ -2,7 +2,7 @@ package general
 
 import "time"
 
-// This is the configuration data structure
+// Config is the configuration data structure
 // Set verbose true if you want more output details.
 type Config struct {
 	Elasticsearch struct {
@@ -32,7 +32,7 @@ type Config struct {
 	} `json:"actions"`
 }
 
-// This is the cluster details data structure
+// Cluster is the cluster details data structure
 // Set verbose true if you want more output details.
 type Cluster struct {
 	ClusterName                 string  `json:"cluster_name"`
@@ -52,7 +52,7 @@ type Cluster struct {
 	ActiveShardsPercentAsNumber float64 `json:"active_shards_percent_as_number"`
 }
 
-// This is the extended index data structure with parsed details fields.
+// Index is the extended index data structure with parsed details fields.
 // Set verbose true if you want more output details.
 type Index struct {
 	Health          string `json:"health"`

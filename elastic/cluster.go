@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// This function returns the cluster status details.
+// GetClusterStatus function returns the cluster status details.
 // Set verbose true if you want more output details.
 func GetClusterStatus(endpoint string, verbose bool) (types.Cluster, string) {
 	clusterStatus := types.Cluster{}

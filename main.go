@@ -58,7 +58,7 @@ func main() {
 		if err == "" && config.Log.Verbose {
 			log.Println("Cluster Status: " + clStatus.Status)
 		}
-		var doSomething bool = false
+		var doSomething bool
 		//Run Actions
 		if c.String("delete") != "" && c.String("delete") != "no" {
 			if c.String("delete") == "yes" {
