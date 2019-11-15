@@ -22,6 +22,10 @@ func main() {
 			Usage: "Load configuration from `FILE`",
 		},
 		cli.StringFlag{
+			Name:  "verbose",
+			Usage: "Verbose Mode (Accepts true/false). Overide configuration verbose setting.",
+		},
+		cli.StringFlag{
 			Name:  "delete, d",
 			Value: "no",
 			Usage: "'--delete yes' to delete multiple indexes (configuration). '--delete indexname' to delete a single index (dry_run does not work with this option).",
@@ -29,6 +33,7 @@ func main() {
 	}
 
 	app.Action = func(c *cli.Context) error {
+
 		log.SetFlags(0)
 		log.Println("   ____ __           __   _       __  ___          ")
 		log.Println("  / __// /___ _ ___ / /_ (_)____ /  |/  /___ _ ___ ")
@@ -43,7 +48,6 @@ func main() {
 		}
 
 		//Config
-		log.Println(usr.HomeDir)
 		configFile := usr.HomeDir + "/.elasticman/config.json"
 		if c.NArg() > 0 {
 			configFile = c.Args()[0]
@@ -59,18 +63,24 @@ func main() {
 			log.Fatalln("No configuration file found. Looking for '" + configFile + "'.")
 		}
 		//Set verbose mode
-		if config.Log.Verbose {
+		var verbose bool = config.Log.Verbose
+		if c.String("verbose") != "" && c.String("verbose") == "true" {
+			verbose = true
+		} else if c.String("verbose") != "" && c.String("verbose") == "false" {
+			verbose = false
+		}
+		if verbose {
 			log.Println("*** VERBOSE LOG ACTIVATED ***")
 		}
 
 		//Set run pre-conditions
-		var clStatus, err = elastic.GetClusterStatus(config.Elasticsearch.Host, config.Log.Verbose)
+		var clStatus, err = elastic.GetClusterStatus(config.Elasticsearch.Host, verbose)
 
 		if (config.Elasticsearch.RequiredStatus != "" && config.Elasticsearch.RequiredStatus != clStatus.Status) || (clStatus.NumberOfPendingTasks > config.Elasticsearch.MaxNumberOfPendingTasks) {
 			log.Fatalln("Not in the desired status. Exiting Execution.")
 		}
 
-		if err == "" && config.Log.Verbose {
+		if err == "" && verbose {
 			log.Println("Cluster Status: " + clStatus.Status)
 		}
 		var doSomething bool
@@ -79,11 +89,11 @@ func main() {
 			if c.String("delete") == "yes" {
 				log.Println("DELETE INDICES MODE ACTIVATED")
 				doSomething = true
-				deleteAction(config)
+				deleteAction(config, verbose)
 			} else {
 				log.Println("DELETE SINGLE INDEX MODE ACTIVATED")
 				doSomething = true
-				var result = elastic.DeleteIndex(config.Elasticsearch.Host, c.String("delete"), config.Log.Verbose)
+				var result = elastic.DeleteIndex(config.Elasticsearch.Host, c.String("delete"), verbose)
 				if result {
 					log.Println("Index with name '" + c.String("delete") + "' deleted!")
 				} else {
@@ -108,8 +118,8 @@ func main() {
 
 }
 
-func deleteAction(config general.Config) {
-	var parsedIndices, _ = elastic.GetParsedIndices(config.Elasticsearch.Host, config.Log.Verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes)
+func deleteAction(config general.Config, verbose bool) {
+	var parsedIndices, _ = elastic.GetParsedIndices(config.Elasticsearch.Host, verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes)
 	if config.Actions.Delete.Enabled {
 		for _, deletions := range config.Actions.Delete.Todo {
 			elastic.DeleteByDays(config.Elasticsearch.Host, config.Actions.Delete.DryRun, parsedIndices, deletions.KeepDays, deletions.Logtype, deletions.Loglevel, config.Log.Verbose)
