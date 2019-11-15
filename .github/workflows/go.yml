@@ -22,6 +22,7 @@ jobs:
     - name: Get dependencies
       env:
         GOPATH: /home/runner/work/elasticman/go
+        GOBIN: /home/runner/work/elasticman/go/bin
       run: |
         pwd
         if [ -f Gopkg.toml ]; then
@@ -32,6 +33,9 @@ jobs:
         fi
 
     - name: Build
+      env: 
+        GOPATH: /home/runner/work/elasticman/go
+        GOBIN: /home/runner/work/elasticman/go/bin
       run: |
         pwd
         ls
