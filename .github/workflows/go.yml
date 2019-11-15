@@ -37,6 +37,4 @@ jobs:
         GOPATH: /home/runner/work/elasticman/go
         GOBIN: /home/runner/work/elasticman/go/bin
       run: |
-        pwd
-        ls
-        make
+        go build
