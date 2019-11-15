@@ -1,9 +1,5 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5f66fc949da24d148b2b7bb274d347e4)](https://www.codacy.com/manual/daco-tech/elasticman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=daco-tech/elasticman&amp;utm_campaign=Badge_Grade) ![](https://github.com/daco-tech/elasticman/workflows/ElasticMan-Build/badge.svg)
 
-
-
-
-
 # ElasticMan - Elastic Maintenance Tool
 
 This is a simple tool to maintain the ElasticSearch Log indices.
