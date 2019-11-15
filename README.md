@@ -19,7 +19,11 @@ This tool does not compete with ElasticSearch Curator that is a more complete an
 
 ## Config
 
-config.json file content example:
+By default, elasticman searches for the configuration file in a file called config.json in the .elasticsearch directory inside your home directory.
+
+You can override this path by passing -c or --config option (i.e.: elasticman -c ./clusterA.json ...).
+
+~/.elasticman/config.json file content example:
 
 ``` json
 {

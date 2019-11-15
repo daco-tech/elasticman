@@ -5,6 +5,7 @@ import (
 	"elasticman/general"
 	"log"
 	"os"
+	"os/user"
 
 	"github.com/urfave/cli"
 )
@@ -30,15 +31,24 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		log.Println("Elastic Maintenance Tool")
 		log.Println("Starting ElasticMan...")
-		configFile := "config.json"
+
+		usr, userErr := user.Current()
+		if userErr != nil {
+			log.Fatal(userErr)
+		}
+
+		//Config
+		log.Println(usr.HomeDir)
+		configFile := usr.HomeDir + "/.elasticman/config.json"
 		if c.NArg() > 0 {
 			configFile = c.Args()[0]
 		}
-		//Config
+
 		if c.String("config") != "" {
 			configFile = c.String("config")
 		}
 		log.Println("--> Loading Configs...")
+
 		config, cfgErr := general.LoadConfiguration(configFile)
 		if cfgErr != nil {
 			log.Fatalln("No configuration file found. Looking for '" + configFile + "'.")
