@@ -15,14 +15,17 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+        path: go/src/elasticman
 
     - name: Get dependencies
+      env:
+        GOPATH: /home/runner/work/elasticman/go
       run: |
         pwd
         if [ -f Gopkg.toml ]; then
-            mkdir -p /home/runner/go/{bin,src}
-            GOBIN="/home/runner/go/bin"
-            GOPATH="/home/runner/go/"
+            mkdir -p /home/runner/go/bin
             mv /home/runner/work/elasticman/elasticman /home/runner/go/src/elasticman && cd /home/runner/go/src/elasticman
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             $GOBIN/dep ensure
@@ -30,5 +33,6 @@ jobs:
 
     - name: Build
       run: |
-        cd /home/runner/go/src/elasticman
-        go build -v .
+        pwd
+        ls
+        make
