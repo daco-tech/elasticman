@@ -17,7 +17,7 @@ This tool does not compete with ElasticSearch Curator that is a more complete an
 ## Config
 
 config.json file content example:
-```
+    ```json
     {
         "elasticsearch": {
             "host": "http://<server>:9200",
@@ -88,7 +88,7 @@ config.json file content example:
             }
         }
     }
-```
+    ```
 
 This configuration works with indexes with name like "app-example-log-warn-2013.09.20" where the date_index_last_chars are the last 10 chars of this index.
 
@@ -110,7 +110,7 @@ Be aware that the indices date should be in the end of their name and should res
 If some of your indices has a non pattern based name (like '.kibana' or 'logstash'), this tool ignores it. If you enable the log verbose option (config file), you will see that indices being (example: '2019/11/11 00:01:02 Index Date not parsed for index (258): .kibana_1').
 
 #### DELETE SINGLE INDEX
-[!WARNING] This option ignores Dry Run since the user have to specify the index to be deleted.
+**WARNING** - This option ignores Dry Run since the user have to specify the index to be deleted.
 
 Usage: elasticman --delete <index_name>
 
