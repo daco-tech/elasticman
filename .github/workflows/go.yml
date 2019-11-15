@@ -23,7 +23,7 @@ jobs:
             mkdir -p /home/runner/go/{bin,src}
             GOBIN="/home/runner/go/bin"
             GOPATH="/home/runner/go/"
-            ln -s ../elasticman /home/runner/go/src/elasticman
+            mv /home/runner/work/elasticman/elasticman /home/runner/go/src/elasticman && cd /home/runner/work/elasticman/elasticman
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             $GOBIN/dep ensure
         fi
