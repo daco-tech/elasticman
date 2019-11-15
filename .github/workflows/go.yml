@@ -1,4 +1,4 @@
-name: Go
+name: ElasticMan-Build
 on: [push]
 jobs:
 
