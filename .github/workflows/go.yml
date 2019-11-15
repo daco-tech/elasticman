@@ -26,7 +26,7 @@ jobs:
       run: |
         pwd
         if [ -f Gopkg.toml ]; then
-            mkdir -p /home/runner/go/bin
+            mkdir -p /home/runner/work/elasticman/go/bin
             mv /home/runner/work/elasticman/elasticman /home/runner/go/src/elasticman && cd /home/runner/go/src/elasticman
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             $GOBIN/dep ensure
