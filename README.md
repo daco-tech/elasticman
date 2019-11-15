@@ -6,7 +6,7 @@ This is a simple tool to maintain the ElasticSearch Log indices.
 
 The main objective of this project is to create a tool with enough flexibility to clean, consolidate and organize ElasticSearch indices easily.
 
-This tool does not compete with ElasticSearch Curator that is a more complete and maintained tool, but it is a tool that you can keep on your laptop or even in a docker container with very low hardware resources usage.
+The intent of this tool it's not to compete with ElasticSearch Curator, that is a more complete and maintained tool, but it is a tool that you can keep on your laptop or even in a docker container with very low hardware resources usage to allow you to maintain and quickly respond to the day to day challenges.
 
 ## Getting started
 

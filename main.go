@@ -29,7 +29,12 @@ func main() {
 	}
 
 	app.Action = func(c *cli.Context) error {
-		log.Println("Elastic Maintenance Tool")
+		log.SetFlags(0)
+		log.Println("   ____ __           __   _       __  ___          ")
+		log.Println("  / __// /___ _ ___ / /_ (_)____ /  |/  /___ _ ___ ")
+		log.Println(" / _/ / // _ `/(_-</ __// // __// /|_/ // _ \\`/ _ \\")
+		log.Println("/___//_/ \\_,_//___/\\__//_/ \\__//_/  /_/ \\_,_//_//_/")
+		log.SetFlags(1)
 		log.Println("Starting ElasticMan...")
 
 		usr, userErr := user.Current()
