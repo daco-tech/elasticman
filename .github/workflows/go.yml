@@ -21,8 +21,9 @@ jobs:
         pwd
         if [ -f Gopkg.toml ]; then
             mkdir -p /home/runner/go/bin
+            GOBIN="/home/runner/go/bin"
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            /home/runner/go/bin/dep ensure
+            $GOBIN/dep ensure
         fi
 
     - name: Build
