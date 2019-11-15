@@ -9,10 +9,11 @@ This tool does not compete with ElasticSearch Curator that is a more complete an
 ## Getting started
 
 ### From Source
-    * Make sure you have [dep](https://github.com/golang/dep) installed
-    * Clone this repo `git clone https://github.com/daco-tech/elasticman.git`
-    * Create a configuration file with name: config.json at main.go file level with the text in the config section
-    * Run `make` to download dependencies and run the application
+
+*   Make sure you have [dep](https://github.com/golang/dep) installed
+*   Clone this repo `git clone https://github.com/daco-tech/elasticman.git`
+*   Create a configuration file with name: config.json at main.go file level with the text in the config section
+*   Run `make` to download dependencies and run the application
 
 ## Config
 
