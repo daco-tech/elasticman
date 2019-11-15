@@ -14,6 +14,8 @@ import (
 	"github.com/metakeule/fmtdate"
 )
 
+// This function returns indices list from ElasticSearch.
+// Set verbose true if you want more output details.
 func GetIndices(endpoint string, verbose bool) ([]types.Index, string) {
 	indices := []types.Index{}
 
@@ -62,15 +64,17 @@ func GetIndices(endpoint string, verbose bool) ([]types.Index, string) {
 	return indices, "not configured"
 }
 
-func GetParsedIndices(endpoint string, verbose bool, dateformat string, date_last_no_of_chars int, loglevels []string, logtypes []string) (parsed_indices []types.Index, err string) {
+// This function returns indices list with parsed fields filled. Like the existence days of the index, loglevel, logtype and index date.
+// Set verbose true if you want more output details.
+func GetParsedIndices(endpoint string, verbose bool, dateformat string, dateLastNoOfChars int, loglevels []string, logtypes []string) (parsedIndices []types.Index, err string) {
 	var indices, getErr = GetIndices(endpoint, verbose)
-	parsed_indices = []types.Index{}
+	parsedIndices = []types.Index{}
 	if getErr == "" {
 		for i, index := range indices {
 			var indexMod = indices[i]
 			//Parse Date
-			if len(index.Name) > date_last_no_of_chars {
-				var data string = string(index.Name[len(index.Name)-date_last_no_of_chars:])
+			if len(index.Name) > dateLastNoOfChars {
+				var data string = string(index.Name[len(index.Name)-dateLastNoOfChars:])
 				t, parseErr := fmtdate.Parse(dateformat, data)
 				if parseErr == nil {
 					indexMod.ParsedDate = t
@@ -121,8 +125,8 @@ func GetParsedIndices(endpoint string, verbose bool, dateformat string, date_las
 				}
 			}
 
-			parsed_indices = append(parsed_indices, indexMod)
+			parsedIndices = append(parsedIndices, indexMod)
 		}
 	}
-	return parsed_indices, getErr
+	return parsedIndices, getErr
 }

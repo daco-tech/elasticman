@@ -21,9 +21,9 @@ func main() {
 			Usage: "Load configuration from `FILE`",
 		},
 		cli.StringFlag{
-			Name:  "delete",
+			Name:  "delete, d",
 			Value: "no",
-			Usage: "'--delete yes' to activate the Delete Option. '--delete indexname' to delete a single index.",
+			Usage: "'--delete yes' to delete multiple indexes (configuration). '--delete indexname' to delete a single index (dry_run does not work with this option).",
 		},
 	}
 
@@ -58,16 +58,16 @@ func main() {
 		if err == "" && config.Log.Verbose {
 			log.Println("Cluster Status: " + clStatus.Status)
 		}
-		var do_something bool = false
+		var doSomething bool = false
 		//Run Actions
-		if c.String("delete") != "" {
+		if c.String("delete") != "" && c.String("delete") != "no" {
 			if c.String("delete") == "yes" {
 				log.Println("DELETE INDICES MODE ACTIVATED")
-				do_something = true
+				doSomething = true
 				deleteAction(config)
 			} else {
 				log.Println("DELETE SINGLE INDEX MODE ACTIVATED")
-				do_something = true
+				doSomething = true
 				var result = elastic.DeleteIndex(config.Elasticsearch.Host, c.String("delete"), config.Log.Verbose)
 				if result {
 					log.Println("Index with name '" + c.String("delete") + "' deleted!")
@@ -80,24 +80,24 @@ func main() {
 		}
 
 		//If nothing runs say something
-		if !do_something {
+		if !doSomething {
 			log.Fatalln("No action selected for execution! Nothing to do!")
 		}
 
 		return nil
 	}
-	clierr := app.Run(os.Args)
-	if clierr != nil {
-		log.Fatal(clierr)
+	cliErr := app.Run(os.Args)
+	if cliErr != nil {
+		log.Fatal(cliErr)
 	}
 
 }
 
 func deleteAction(config general.Config) {
-	var parsed_indices, _ = elastic.GetParsedIndices(config.Elasticsearch.Host, config.Log.Verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes)
+	var parsedIndices, _ = elastic.GetParsedIndices(config.Elasticsearch.Host, config.Log.Verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes)
 	if config.Actions.Delete.Enabled {
 		for _, deletions := range config.Actions.Delete.Todo {
-			elastic.DeleteByDays(config.Elasticsearch.Host, config.Actions.Delete.DryRun, parsed_indices, deletions.KeepDays, deletions.Logtype, deletions.Loglevel, config.Log.Verbose)
+			elastic.DeleteByDays(config.Elasticsearch.Host, config.Actions.Delete.DryRun, parsedIndices, deletions.KeepDays, deletions.Logtype, deletions.Loglevel, config.Log.Verbose)
 		}
 
 	}
