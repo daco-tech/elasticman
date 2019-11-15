@@ -20,9 +20,8 @@ jobs:
       run: |
         if [ -f Gopkg.toml ]; then
             mkdir -p /home/runner/go/bin
-            go env -w GOPATH=$HOME/go
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            $GOPATH/bin/dep ensure
+            /home/runner/go/bin/dep ensure
         fi
 
     - name: Build
