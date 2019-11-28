@@ -46,18 +46,28 @@ You can override this path by passing -c or --config option (i.e.: elasticman -c
             "warn",
             "warning",
             "error",
-            "critical"
+            "critical",
+            "severe",
+            "fatal"
         ],
         "logtypes": [
             "log",
-            "httpstatus",
+            "evt",
+            "orders",
             "metric"
+        ],
+        "ignorelist": [
+            "trash",
+            "(.kibana)*$",
+            "kibana_backup",
+            "logstash",
+            ".*(-all)$"
         ]
     },
     "actions": {
         "delete": {
             "enabled": true,
-            "dry_run": true,
+            "dry_run": false,
             "todo": [
                 {
                     "loglevel": "debug",
@@ -86,6 +96,14 @@ You can override this path by passing -c or --config option (i.e.: elasticman -c
                 },
                 {
                     "loglevel": "critical",
+                    "keep-days": 60
+                },
+                {
+                    "loglevel": "severe",
+                    "keep-days": 60
+                },
+                {
+                    "loglevel": "fatal",
                     "keep-days": 60
                 },
                 {

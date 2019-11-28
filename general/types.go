@@ -18,6 +18,7 @@ type Config struct {
 		DateIndexLastChars int      `json:"date_index_last_chars"`
 		Loglevels          []string `json:"loglevels"`
 		Logtypes           []string `json:"logtypes"`
+		Ignorelist         []string `json:"ignorelist"`
 	} `json:"parser"`
 	Actions struct {
 		Delete struct {

@@ -99,16 +99,13 @@ func main() {
 				} else {
 					log.Println("Index with name '" + c.String("delete") + "' NOT deleted! Check log.")
 				}
-
 			}
-
 		}
 
 		//If nothing runs say something
 		if !doSomething {
 			log.Fatalln("No action selected for execution! Nothing to do!")
 		}
-
 		return nil
 	}
 	cliErr := app.Run(os.Args)
@@ -119,7 +116,7 @@ func main() {
 }
 
 func deleteAction(config general.Config, verbose bool) {
-	var parsedIndices, _ = elastic.GetParsedIndices(config.Elasticsearch.Host, verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes)
+	var parsedIndices, _ = elastic.GetParsedIndices(config.Elasticsearch.Host, verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes, config.Parser.Ignorelist)
 	if config.Actions.Delete.Enabled {
 		for _, deletions := range config.Actions.Delete.Todo {
 			elastic.DeleteByDays(config.Elasticsearch.Host, config.Actions.Delete.DryRun, parsedIndices, deletions.KeepDays, deletions.Logtype, deletions.Loglevel, config.Log.Verbose)
