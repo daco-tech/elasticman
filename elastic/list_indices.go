@@ -7,10 +7,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
-	"regexp"
 
 	"github.com/metakeule/fmtdate"
 )
@@ -65,9 +65,8 @@ func GetIndices(endpoint string, verbose bool) ([]types.Index, string) {
 	return indices, "not configured"
 }
 
-// GetParsedIndices function returns indices list with parsed fields filled. Like the existence days of the index, loglevel, logtype and index date.
+// GetIndicesWithoutIgnored function returns indices list with parsed fields filled removing the user ignored indexes set in the config file. Like the existence days of the index, loglevel, logtype and index date.
 // Set verbose true if you want more output details.
-
 func GetIndicesWithoutIgnored(endpoint string, verbose bool, ignorelist []string) (parsedIndices []types.Index, err string) {
 	var indices, getErr = GetIndices(endpoint, verbose)
 	cleanIndices := make([]types.Index, len(parsedIndices))
@@ -75,9 +74,9 @@ func GetIndicesWithoutIgnored(endpoint string, verbose bool, ignorelist []string
 		var ignorable bool
 		for _, ignored := range ignorelist {
 			r, _ := regexp.Compile(ignored)
-			
+
 			if r.MatchString(indexed.Name) {
-				
+
 				ignorable = true
 			}
 		}
@@ -88,6 +87,8 @@ func GetIndicesWithoutIgnored(endpoint string, verbose bool, ignorelist []string
 	return cleanIndices, getErr
 }
 
+// GetParsedIndices function returns indices list with parsed fields filled. Like the existence days of the index, loglevel, logtype and index date.
+// Set verbose true if you want more output details.
 func GetParsedIndices(endpoint string, verbose bool, dateformat string, dateLastNoOfChars int, loglevels []string, logtypes []string, ignorelist []string) (parsedIndices []types.Index, err string) {
 	var indices, getErr = GetIndicesWithoutIgnored(endpoint, verbose, ignorelist)
 
