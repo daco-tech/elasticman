@@ -58,7 +58,7 @@ You can override this path by passing -c or --config option (i.e.: elasticman -c
         ],
         "ignorelist": [
             "trash",
-            "(.kibana)*$",
+            "^.kibana[a-zA-Z0-9_.]*$",
             "kibana_backup",
             "logstash",
             ".*(-all)$"
