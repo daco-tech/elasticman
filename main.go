@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"strconv"
 
 	"github.com/urfave/cli"
 )
@@ -117,10 +118,15 @@ func main() {
 
 func deleteAction(config general.Config, verbose bool) {
 	var parsedIndices, _ = elastic.GetParsedIndices(config.Elasticsearch.Host, verbose, config.Parser.DateFormat, config.Parser.DateIndexLastChars, config.Parser.Loglevels, config.Parser.Logtypes, config.Parser.Ignorelist)
+	var totalDeleted int
 	if config.Actions.Delete.Enabled {
 		for _, deletions := range config.Actions.Delete.Todo {
-			elastic.DeleteByDays(config.Elasticsearch.Host, config.Actions.Delete.DryRun, parsedIndices, deletions.KeepDays, deletions.Logtype, deletions.Loglevel, config.Log.Verbose)
+			totalDeleted += elastic.DeleteByDays(config.Elasticsearch.Host, config.Actions.Delete.DryRun, parsedIndices, deletions.KeepDays, deletions.Logtype, deletions.Loglevel, config.Log.Verbose)
 		}
-
+		if totalDeleted > 0 {
+			log.Println("Number of deleted indices: " + strconv.Itoa(totalDeleted))
+		} else {
+			log.Println("Nothing deleted!")
+		}
 	}
 }

@@ -52,7 +52,7 @@ func DeleteIndex(endpoint string, index string, verbose bool) bool {
 // DeleteByDays function is used to delete indexes by days. This function also provides a dry run option.
 // It uses a list of indexes provided by the GetParsedIndices function.
 // Set verbose true if you want more output details.
-func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, days int, logtype string, loglevel string, verbose bool) {
+func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, days int, logtype string, loglevel string, verbose bool) int {
 	var deletedIndices int
 	var possibleDeletions int
 	for _, index := range parsedIndices {
@@ -79,13 +79,21 @@ func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, day
 			}
 		}
 	}
-	if deletedIndices > 0 {
-		log.Println("Deleted Indexes (" + loglevel + "): " + strconv.Itoa(deletedIndices))
+
+	var text string
+	if dryrun {
+		text = text + " Possible deletions: " + strconv.Itoa(possibleDeletions)
 	} else {
-		var text = "Nothing deleted (" + loglevel + ")!"
-		if dryrun {
-			text = text + " Possible deletions: " + strconv.Itoa(possibleDeletions)
+		if deletedIndices > 0 {
+			text = "Deleted Indexes (" + loglevel + "): " + strconv.Itoa(deletedIndices)
+		} else {
+			if verbose {
+				text = "Nothing deleted (" + loglevel + ")!"
+			}
 		}
+	}
+	if text != "" {
 		log.Println(text)
 	}
+	return deletedIndices
 }

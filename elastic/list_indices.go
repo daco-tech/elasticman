@@ -98,9 +98,7 @@ func GetIndicesWithoutIgnored(endpoint string, verbose bool, ignorelist []string
 // Set verbose true if you want more output details.
 func GetParsedIndices(endpoint string, verbose bool, dateformat string, dateLastNoOfChars int, loglevels []string, logtypes []string, ignorelist []string) (parsedIndices []types.Index, err string) {
 	var indices, getErr = GetIndicesWithoutIgnored(endpoint, verbose, ignorelist)
-	if verbose {
-		log.Println("Eligible Indices to be parsed: " + strconv.Itoa(len(indices)) + ";")
-	}
+	log.Println("Eligible Indices to be parsed: " + strconv.Itoa(len(indices)) + ";")
 
 	if getErr == "" {
 		for i, index := range indices {
