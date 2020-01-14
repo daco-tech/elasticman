@@ -8,6 +8,7 @@ import (
 	"os/user"
 	"strconv"
 
+	"github.com/brettski/go-termtables"
 	"github.com/urfave/cli"
 )
 
@@ -15,7 +16,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "ElasticMan"
 	app.Usage = "Elastic Maintenance Tool"
-	app.Version = "3,1415926535897932384626433" //yes, it Pi :)
+	app.Version = "3,1415926535897932384626433" //yes, it is Pi :)
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -30,6 +31,11 @@ func main() {
 			Name:  "delete, d",
 			Value: "no",
 			Usage: "'--delete yes' to delete multiple indexes (configuration). '--delete indexname' to delete a single index (dry_run does not work with this option).",
+		},
+		cli.StringFlag{
+			Name:  "info, i",
+			Value: "",
+			Usage: "'--info all' to display all info; '--info indices' to display all indices info; '--info notparsed' to display not parsed indexes info; '--info parsed' to display parsed indexes info; '--info cluster' to display cluster info;",
 		},
 	}
 
@@ -85,15 +91,17 @@ func main() {
 			log.Println("Cluster Status: " + clStatus.Status)
 		}
 		var doSomething bool
+
 		//Run Actions
+
+		// #############  DELETE ACTION TRIGGER  ################
 		if c.String("delete") != "" && c.String("delete") != "no" {
+			doSomething = true
 			if c.String("delete") == "yes" {
 				log.Println("DELETE INDICES MODE ACTIVATED")
-				doSomething = true
 				deleteAction(config, verbose)
 			} else {
 				log.Println("DELETE SINGLE INDEX MODE ACTIVATED")
-				doSomething = true
 				var result = elastic.DeleteIndex(config.Elasticsearch.Host, c.String("delete"), verbose)
 				if result {
 					log.Println("Index with name '" + c.String("delete") + "' deleted!")
@@ -103,6 +111,12 @@ func main() {
 			}
 		}
 
+		// #############  DELETE ACTION TRIGGER  ################
+		if c.String("info") != "" {
+			doSomething = true
+			log.Println("INFO MODE ACTIVATED")
+			info(config, verbose, c.String("info"))
+		}
 		//If nothing runs say something
 		if !doSomething {
 			log.Fatalln("No action selected for execution! Nothing to do!")
@@ -129,4 +143,57 @@ func deleteAction(config general.Config, verbose bool) {
 			log.Println("Nothing deleted!")
 		}
 	}
+}
+
+func info(config general.Config, verbose bool, action string) {
+	if action == "cluster" {
+
+	} else {
+		if action == "cluster" {
+			PrintClusterInfo(config, verbose)
+		} else if action == "notparsed" {
+			PrintIndicesInfo(config, verbose, false, false)
+		} else if action == "parsed" {
+			PrintIndicesInfo(config, verbose, false, true)
+		} else if action == "indices" {
+			PrintIndicesInfo(config, verbose, true, false)
+		} else if action == "all" {
+			PrintClusterInfo(config, verbose)
+			PrintIndicesInfo(config, verbose, true, false)
+		}
+	}
+
+}
+
+func PrintIndicesInfo(config general.Config, verbose bool, all bool, parsed bool) {
+
+}
+
+func PrintClusterInfo(config general.Config, verbose bool) {
+	var clStatus, err = elastic.GetClusterStatus(config.Elasticsearch.Host, verbose)
+	if err != "" {
+		log.Panicln(err)
+	}
+
+	table := termtables.CreateTable()
+	table.AddHeaders("CLUSTER INFO", "")
+	table.AddRow("Cluster Name:", clStatus.ClusterName)
+	table.AddRow("Cluster Status:", clStatus.Status)
+	table.AddRow("Cluster TimedOut:", clStatus.TimedOut)
+	table.AddRow("Cluster Number Of Nodes:", clStatus.NumberOfNodes)
+	table.AddRow("Cluster Number Of Data Nodes:", clStatus.NumberOfDataNodes)
+	table.AddRow("Cluster Active Primary Shards:", clStatus.ActivePrimaryShards)
+	table.AddRow("Cluster Active Shards:", clStatus.ActiveShards)
+	table.AddRow("Cluster Relocating Shards:", clStatus.RelocatingShards)
+	table.AddRow("Cluster Initializing Shards:", clStatus.InitializingShards)
+	table.AddRow("Cluster Unassigned Shards:", clStatus.UnassignedShards)
+	table.AddRow("Cluster Delayed Unassigned Shards:", clStatus.DelayedUnassignedShards)
+	table.AddRow("Cluster Number Of Pending Tasks:", clStatus.NumberOfPendingTasks)
+	table.AddRow("Cluster Number Of In Flight Fetch:", clStatus.NumberOfInFlightFetch)
+	table.AddRow("Cluster Task Max Waiting In Queue:", strconv.Itoa(clStatus.TaskMaxWaitingInQueueMillis)+" (Millis)")
+	table.AddRow("Cluster Active Shards:", strconv.FormatFloat(clStatus.ActiveShardsPercentAsNumber, 'f', 2, 64)+" %")
+
+	log.SetFlags(0)
+	log.Println(table.Render())
+	log.SetFlags(1)
 }

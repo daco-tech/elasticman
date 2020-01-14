@@ -5,6 +5,10 @@
 [[constraint]]
   name="github.com/metakeule/fmtdate"
   version = "v1.1.2"
+
+[[constraint]]
+  name="github.com/brettski/go-termtables"
+  version = "v1.0"
   
 [[override]]
   name = "github.com/russross/blackfriday"
