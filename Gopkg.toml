@@ -1,6 +1,6 @@
 [[constraint]]
-  name="github.com/urfave/cli"
-  version = "v1.19.1"
+  name="github.com/spf13/cobra/cobra"
+  version = "v0.0.5"
 
 [[constraint]]
   name="github.com/metakeule/fmtdate"

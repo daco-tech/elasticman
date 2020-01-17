@@ -3,6 +3,7 @@ package elastic
 import (
 	"elasticman/general"
 	types "elasticman/general"
+	"elasticman/singleton"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,11 +12,11 @@ import (
 
 // DeleteIndex function is used to delete indexes by providing the elastic endpoint and the index name.
 // Set verbose true if you want more output details.
-func DeleteIndex(endpoint string, index string, verbose bool) bool {
+func DeleteIndex(index string) bool {
 
-	if index != "" && endpoint != "" {
+	if index != "" && singleton.GetConfig().Elasticsearch.Host != "" {
 		client := &http.Client{}
-		req, err := http.NewRequest("DELETE", endpoint+"/"+index, nil)
+		req, err := http.NewRequest("DELETE", singleton.GetConfig().Elasticsearch.Host+"/"+index, nil)
 		if err != nil {
 			log.Fatalln(err)
 			return false
@@ -40,7 +41,7 @@ func DeleteIndex(endpoint string, index string, verbose bool) bool {
 		if general.HasPrefix(resp.Status, "200") {
 			return true
 		}
-		if verbose {
+		if singleton.GetConfig().Log.Verbose {
 			log.Println("response Status : ", resp.Status)
 			log.Println("response Headers : ", resp.Header)
 			log.Println("response Body : ", string(respBody))
@@ -52,7 +53,7 @@ func DeleteIndex(endpoint string, index string, verbose bool) bool {
 // DeleteByDays function is used to delete indexes by days. This function also provides a dry run option.
 // It uses a list of indexes provided by the GetParsedIndices function.
 // Set verbose true if you want more output details.
-func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, days int, logtype string, loglevel string, verbose bool) int {
+func DeleteByDays(parsedIndices []types.Index, days int, logtype string, loglevel string) int {
 	var deletedIndices int
 	var possibleDeletions int
 	for _, index := range parsedIndices {
@@ -68,8 +69,8 @@ func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, day
 				delete++
 			}
 			if delete == 3 {
-				if !dryrun {
-					DeleteIndex(endpoint, index.Name, verbose)
+				if !singleton.GetConfig().Actions.Delete.DryRun {
+					DeleteIndex(index.Name)
 					deletedIndices++
 					log.Println("Index with name '" + index.Name + "' has been deleted since it has " + strconv.Itoa(index.ExistenceInDays) + " days and logtype/loglevel '" + index.ParsedLogType + "'/'" + index.ParsedLogLevel + "'.")
 				} else {
@@ -81,13 +82,13 @@ func DeleteByDays(endpoint string, dryrun bool, parsedIndices []types.Index, day
 	}
 
 	var text string
-	if dryrun {
+	if singleton.GetConfig().Actions.Delete.DryRun {
 		text = text + " Possible deletions: " + strconv.Itoa(possibleDeletions)
 	} else {
 		if deletedIndices > 0 {
 			text = "Deleted Indexes (" + loglevel + "): " + strconv.Itoa(deletedIndices)
 		} else {
-			if verbose {
+			if singleton.GetConfig().Log.Verbose {
 				text = "Nothing deleted (" + loglevel + ")!"
 			}
 		}

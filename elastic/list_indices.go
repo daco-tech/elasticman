@@ -3,6 +3,7 @@ package elastic
 import (
 	"elasticman/general"
 	types "elasticman/general"
+	"elasticman/singleton"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -17,12 +18,12 @@ import (
 
 // GetIndices function returns indices list from ElasticSearch.
 // Set verbose true if you want more output details.
-func GetIndices(endpoint string, verbose bool) ([]types.Index, string) {
+func GetIndices() ([]types.Index, string) {
 	indices := []types.Index{}
 
-	if endpoint != "" {
+	if singleton.GetConfig().Elasticsearch.Host != "" {
 		client := &http.Client{}
-		req, err := http.NewRequest("GET", endpoint+"/_cat/indices?format=json&bytes=b", nil)
+		req, err := http.NewRequest("GET", singleton.GetConfig().Elasticsearch.Host+"/_cat/indices?format=json&bytes=b", nil)
 		if err != nil {
 			log.Fatalln(err)
 			return indices, "not connected"
@@ -53,7 +54,7 @@ func GetIndices(endpoint string, verbose bool) ([]types.Index, string) {
 			log.Println("Returning indices...")
 			return indices, ""
 		}
-		if verbose {
+		if singleton.GetConfig().Log.Verbose {
 			log.Println("response Status : ", resp.Status)
 			log.Println("response Headers : ", resp.Header)
 			log.Println("response Body : ", string(respBody))
@@ -67,19 +68,19 @@ func GetIndices(endpoint string, verbose bool) ([]types.Index, string) {
 
 // GetIndicesWithoutIgnored function returns indices list with parsed fields filled removing the user ignored indexes set in the config file. Like the existence days of the index, loglevel, logtype and index date.
 // Set verbose true if you want more output details.
-func GetIndicesWithoutIgnored(endpoint string, verbose bool, ignorelist []string) (parsedIndices []types.Index, err string) {
-	var indices, getErr = GetIndices(endpoint, verbose)
+func GetIndicesWithoutIgnored() (parsedIndices []types.Index, err string) {
+	var indices, getErr = GetIndices()
 	cleanIndices := make([]types.Index, len(parsedIndices))
 	for _, indexed := range indices {
 		var ignorable bool
-		for _, ignored := range ignorelist {
+		for _, ignored := range singleton.GetConfig().Parser.Ignorelist {
 			if ignored != "" {
 				r, _ := regexp.Compile(ignored)
 
 				if r.MatchString(indexed.Name) {
 
 					ignorable = true
-					if verbose {
+					if singleton.GetConfig().Log.Verbose {
 						log.Println("Index name: " + indexed.Name + " matches the regex: " + ignored)
 					}
 					break
@@ -96,17 +97,17 @@ func GetIndicesWithoutIgnored(endpoint string, verbose bool, ignorelist []string
 
 // GetParsedIndices function returns indices list with parsed fields filled. Like the existence days of the index, loglevel, logtype and index date.
 // Set verbose true if you want more output details.
-func GetParsedIndices(endpoint string, verbose bool, dateformat string, dateLastNoOfChars int, loglevels []string, logtypes []string, ignorelist []string) (parsedIndices []types.Index, err string) {
-	var indices, getErr = GetIndicesWithoutIgnored(endpoint, verbose, ignorelist)
+func GetParsedIndices() (parsedIndices []types.Index, err string) {
+	var indices, getErr = GetIndicesWithoutIgnored()
 	log.Println("Eligible Indices to be parsed: " + strconv.Itoa(len(indices)) + ";")
 
 	if getErr == "" {
 		for i, index := range indices {
 			var indexMod = indices[i]
 			//Parse Date
-			if len(index.Name) > dateLastNoOfChars {
-				var data string = string(index.Name[len(index.Name)-dateLastNoOfChars:])
-				t, parseErr := fmtdate.Parse(dateformat, data)
+			if len(index.Name) > singleton.GetConfig().Parser.DateIndexLastChars {
+				var data string = string(index.Name[len(index.Name)-singleton.GetConfig().Parser.DateIndexLastChars:])
+				t, parseErr := fmtdate.Parse(singleton.GetConfig().Parser.DateFormat, data)
 				if parseErr == nil {
 					indexMod.ParsedDate = t
 					//Calculate Days of Existence
@@ -117,8 +118,8 @@ func GetParsedIndices(endpoint string, verbose bool, dateformat string, dateLast
 			}
 
 			//Parse LogLevel
-			if len(loglevels) > 0 {
-				for _, loglevel := range loglevels {
+			if len(singleton.GetConfig().Parser.Loglevels) > 0 {
+				for _, loglevel := range singleton.GetConfig().Parser.Loglevels {
 					if strings.Contains(index.Name, loglevel) {
 						indexMod.ParsedLogLevel = loglevel
 					}
@@ -126,8 +127,8 @@ func GetParsedIndices(endpoint string, verbose bool, dateformat string, dateLast
 			}
 
 			//Parse LogTypes
-			if len(logtypes) > 0 {
-				for _, logtype := range logtypes {
+			if len(singleton.GetConfig().Parser.Logtypes) > 0 {
+				for _, logtype := range singleton.GetConfig().Parser.Logtypes {
 					if strings.Contains(index.Name, logtype) {
 						indexMod.ParsedLogType = logtype
 					}
@@ -137,21 +138,21 @@ func GetParsedIndices(endpoint string, verbose bool, dateformat string, dateLast
 			//Advice Parse Issues
 			if indexMod.ParsedDate.IsZero() {
 				indexMod.ParseErrors = true
-				if verbose {
+				if singleton.GetConfig().Log.Verbose {
 					log.Println("Index Date not parsed for index (" + strconv.Itoa(i) + "): " + indexMod.Name)
 				}
 			}
 
-			if indexMod.ParsedLogLevel == "" && len(loglevels) > 0 {
+			if indexMod.ParsedLogLevel == "" && len(singleton.GetConfig().Parser.Loglevels) > 0 {
 				indexMod.ParseErrors = true
-				if verbose {
+				if singleton.GetConfig().Log.Verbose {
 					log.Println("LogLevel not parsed for index (" + strconv.Itoa(i) + "): " + indexMod.Name)
 				}
 			}
 
-			if indexMod.ParsedLogType == "" && len(logtypes) > 0 {
+			if indexMod.ParsedLogType == "" && len(singleton.GetConfig().Parser.Logtypes) > 0 {
 				indexMod.ParseErrors = true
-				if verbose {
+				if singleton.GetConfig().Log.Verbose {
 					log.Println("LogType not parsed for index (" + strconv.Itoa(i) + "): " + indexMod.Name)
 				}
 			}
