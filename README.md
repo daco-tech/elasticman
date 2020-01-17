@@ -21,7 +21,7 @@ The intent of this tool it's not to compete with ElasticSearch Curator, that is 
 
 By default, elasticman searches for the configuration file in a file called config.json in the .elasticsearch directory inside your home directory.
 
-You can override this path by passing -c or --config option (i.e.: elasticman -c ./clusterA.json ...).
+You can override this path by passing -c or --config option (i.e.: elasticman --config ./clusterA.json ...).
 
 ~/.elasticman/config.json file content example:
 
@@ -123,7 +123,7 @@ This configuration works with indexes with name like "app-example-log-warn-2013.
 ### DELETE 
 
 #### DELETE MULTIPLE INDICES
-Usage: elasticman --delete yes
+Usage: elasticman delete
 
 This command deletes indices according with the configuration defined in the actions -> delete section. 
 
@@ -138,6 +138,6 @@ If some of your indices has a non pattern based name (like '.kibana' or 'logstas
 #### DELETE SINGLE INDEX
 **WARNING** - This option ignores Dry Run since the user have to specify the index to be deleted.
 
-Usage: elasticman --delete <index_name>
+Usage: elasticman delete --index <index_name>
 
 This option deletes the index with the defined name. It is the same as running the curl to the API: 'curl -X DELETE "host:9200/<index_name>"'
