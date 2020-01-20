@@ -141,3 +141,14 @@ If some of your indices has a non pattern based name (like '.kibana' or 'logstas
 Usage: elasticman delete --index <index_name>
 
 This option deletes the index with the defined name. It is the same as running the curl to the API: 'curl -X DELETE "host:9200/<index_name>"'
+
+
+### REINDEX
+
+Usage: elasticman reindex <indexname> <new_or_existing_index>
+
+Reindexes index data into a new index name or to an existing index.
+
+This option does not delete the original index, if you want to rename an existing index you should reindex to the new name and then delete the original index after verify that everything was reindexed to the new one.
+
+This option is also useful if you changed the matching index template and you need to reindex the index to meet the new one.
