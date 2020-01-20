@@ -145,7 +145,7 @@ This option deletes the index with the defined name. It is the same as running t
 
 ### REINDEX
 
-Usage: elasticman reindex <indexname> <new_or_existing_index>
+Usage: elasticman reindex \<indexname\> \<new_or_existing_index\>
 
 Reindexes index data into a new index name or to an existing index.
 
