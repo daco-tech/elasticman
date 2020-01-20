@@ -3,6 +3,7 @@ package elastic
 import (
 	"bytes"
 	"elasticman/general"
+	"elasticman/singleton"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,9 +11,9 @@ import (
 
 // Reindex function is used to rename an index by providing the elastic endpoint, the original index name and the new index name.
 // Set verbose true if you want more output details.
-func Reindex(endpoint string, originalIndexName string, newIndexName string, verbose bool) bool {
+func Reindex(originalIndexName string, newIndexName string) bool {
 
-	if originalIndexName != "" && newIndexName != "" && endpoint != "" {
+	if originalIndexName != "" && newIndexName != "" && singleton.GetConfig().Elasticsearch.Host != "" {
 		client := &http.Client{}
 		var jsonStr = []byte(`
 		{
@@ -23,7 +24,7 @@ func Reindex(endpoint string, originalIndexName string, newIndexName string, ver
 				"index": "` + newIndexName + `"
 			}
 		}`)
-		req, err := http.NewRequest("POST", endpoint+"/_reindex", bytes.NewBuffer(jsonStr))
+		req, err := http.NewRequest("POST", singleton.GetConfig().Elasticsearch.Host+"/_reindex", bytes.NewBuffer(jsonStr))
 		req.Header.Set("Content-Type", "application/json")
 		if err != nil {
 			log.Fatalln(err)
@@ -49,7 +50,7 @@ func Reindex(endpoint string, originalIndexName string, newIndexName string, ver
 		if general.HasPrefix(resp.Status, "200") {
 			return true
 		}
-		if verbose {
+		if singleton.GetConfig().Log.Verbose {
 			log.Println("response Status : ", resp.Status)
 			log.Println("response Headers : ", resp.Header)
 			log.Println("response Body : ", string(respBody))

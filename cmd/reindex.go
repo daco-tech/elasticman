@@ -5,7 +5,9 @@ This file is part of {{ .appName }}.
 package cmd
 
 import (
+	"elasticman/elastic"
 	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -13,15 +15,17 @@ import (
 // reindexCmd represents the reindex command
 var reindexCmd = &cobra.Command{
 	Use:   "reindex",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Reindex indice to another (new or add to existing index)",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("reindex called")
+		fmt.Println("Reindex called: Index: " + args[0] + " -> " + args[1])
+		var result = elastic.Reindex(args[0], args[1])
+		if result {
+			log.Println("SUCCESS! Reindex index '" + args[0] + "' was reindexed to: '" + args[1] + "'.")
+		} else {
+			log.Println("FAIL! Reindex index '" + args[0] + "' was NOT reindexed to: '" + args[1] + "'.")
+		}
+
 	},
 }
 
