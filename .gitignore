@@ -24,6 +24,7 @@ _deps
 *.dll
 *.so
 *.dylib
+elasticman
 
 # Test binary, built with `go test -c`
 *.test
