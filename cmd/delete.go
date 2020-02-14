@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"elasticman/elastic"
+	"elasticman/general"
 	"elasticman/singleton"
 	"log"
 	"strconv"
@@ -23,18 +24,22 @@ var deleteCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if specific == "" {
-			log.Println("DELETE EXPIRED INDICES MODE ACTIVATED")
-			deleteAction()
+			log.Println("DELETE EXPIRED INDICES (Type 'Y' to continue, or 'N' to abort):")
+			if general.AskForConfirmation() {
+				deleteAction()
+			}
+
 		} else {
-			log.Println("DELETE SINGLE INDEX MODE ACTIVATED")
-			var result = elastic.DeleteIndex(specific)
-			if result {
-				log.Println("Index with name '" + specific + "' deleted!")
-			} else {
-				log.Println("Index with name '" + specific + "' NOT deleted! Check log.")
+			log.Println("DELETE SINGLE INDEX (Type 'Y' to continue, or 'N' to abort):")
+			if general.AskForConfirmation() {
+				var result = elastic.DeleteIndex(specific)
+				if result {
+					log.Println("Index with name '" + specific + "' deleted!")
+				} else {
+					log.Println("Index with name '" + specific + "' NOT deleted! Check log.")
+				}
 			}
 		}
-
 	},
 }
 
