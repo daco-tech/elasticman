@@ -24,21 +24,31 @@ var deleteCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if specific == "" {
-			log.Println("DELETE EXPIRED INDICES (Type 'Y' to continue, or 'N' to abort):")
-			if general.AskForConfirmation() {
+			log.Println("DELETE EXPIRED INDICES")
+			if ConfirmAll {
 				deleteAction()
-			}
-
-		} else {
-			log.Println("DELETE SINGLE INDEX (Type 'Y' to continue, or 'N' to abort):")
-			if general.AskForConfirmation() {
-				var result = elastic.DeleteIndex(specific)
-				if result {
-					log.Println("Index with name '" + specific + "' deleted!")
+			} else {
+				log.Println("Type 'Y' to continue, or 'N' to abort:")
+				if general.AskForConfirmation() {
+					deleteAction()
 				} else {
-					log.Println("Index with name '" + specific + "' NOT deleted! Check log.")
+					log.Println("Aborted!")
 				}
 			}
+		} else {
+			log.Println("DELETE SINGLE INDEX")
+
+			if ConfirmAll {
+				deleteSpecificIndex()
+			} else {
+				log.Println("Type 'Y' to continue, or 'N' to abort:")
+				if general.AskForConfirmation() {
+					deleteSpecificIndex()
+				} else {
+					log.Println("Aborted!")
+				}
+			}
+
 		}
 	},
 }
@@ -57,7 +67,14 @@ func init() {
 	// is called directly, e.g.:
 	// deleteCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
+func deleteSpecificIndex() {
+	var result = elastic.DeleteIndex(specific)
+	if result {
+		log.Println("Index with name '" + specific + "' deleted!")
+	} else {
+		log.Println("Index with name '" + specific + "' NOT deleted! Check log.")
+	}
+}
 func deleteAction() {
 	var parsedIndices, _ = elastic.GetParsedIndices()
 	var totalDeleted int

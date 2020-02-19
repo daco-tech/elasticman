@@ -3,6 +3,7 @@ package elastic
 import (
 	"elasticman/general"
 	types "elasticman/general"
+	"elasticman/singleton"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -11,7 +12,7 @@ import (
 
 // GetClusterStatus function returns the cluster status details.
 // Set verbose true if you want more output details.
-func GetClusterStatus(endpoint string, verbose bool) (types.Cluster, string) {
+func GetClusterStatus(endpoint string) (types.Cluster, string) {
 	clusterStatus := types.Cluster{}
 	if endpoint != "" {
 		client := &http.Client{}
@@ -45,7 +46,7 @@ func GetClusterStatus(endpoint string, verbose bool) (types.Cluster, string) {
 			}
 			return clusterStatus, ""
 		}
-		if verbose {
+		if singleton.GetVerbose() {
 			log.Println("response Status : ", resp.Status)
 			log.Println("response Headers : ", resp.Header)
 			log.Println("response Body : ", string(respBody))

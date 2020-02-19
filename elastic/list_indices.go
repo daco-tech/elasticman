@@ -54,7 +54,7 @@ func GetIndices() ([]types.Index, string) {
 			log.Println("Returning indices...")
 			return indices, ""
 		}
-		if singleton.GetConfig().Log.Verbose {
+		if singleton.GetVerbose() {
 			log.Println("response Status : ", resp.Status)
 			log.Println("response Headers : ", resp.Header)
 			log.Println("response Body : ", string(respBody))
@@ -80,7 +80,7 @@ func GetIndicesWithoutIgnored() (parsedIndices []types.Index, err string) {
 				if r.MatchString(indexed.Name) {
 
 					ignorable = true
-					if singleton.GetConfig().Log.Verbose {
+					if singleton.GetVerbose() {
 						log.Println("Index name: " + indexed.Name + " matches the regex: " + ignored)
 					}
 					break
@@ -138,21 +138,21 @@ func GetParsedIndices() (parsedIndices []types.Index, err string) {
 			//Advice Parse Issues
 			if indexMod.ParsedDate.IsZero() {
 				indexMod.ParseErrors = true
-				if singleton.GetConfig().Log.Verbose {
+				if singleton.GetVerbose() {
 					log.Println("Index Date not parsed for index (" + strconv.Itoa(i) + "): " + indexMod.Name)
 				}
 			}
 
 			if indexMod.ParsedLogLevel == "" && len(singleton.GetConfig().Parser.Loglevels) > 0 {
 				indexMod.ParseErrors = true
-				if singleton.GetConfig().Log.Verbose {
+				if singleton.GetVerbose() {
 					log.Println("LogLevel not parsed for index (" + strconv.Itoa(i) + "): " + indexMod.Name)
 				}
 			}
 
 			if indexMod.ParsedLogType == "" && len(singleton.GetConfig().Parser.Logtypes) > 0 {
 				indexMod.ParseErrors = true
-				if singleton.GetConfig().Log.Verbose {
+				if singleton.GetVerbose() {
 					log.Println("LogType not parsed for index (" + strconv.Itoa(i) + "): " + indexMod.Name)
 				}
 			}

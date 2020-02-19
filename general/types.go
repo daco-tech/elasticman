@@ -30,8 +30,51 @@ type Config struct {
 				Logtype  string `json:"logtype,omitempty"`
 			} `json:"todo"`
 		} `json:"delete"`
+		Consolidate struct {
+			Enabled           bool `json:"enabled"`
+			DryRun            bool `json:"dry_run"`
+			DeleteSourceIndex bool `json:"delete_source_index"`
+			Todo              []struct {
+				Loglevel       string `json:"loglevel"`
+				KeepDays       int    `json:"keep-days"`
+				Logtype        string `json:"logtype"`
+				Suffix         string `json:"suffix"`
+				AddCurrentYear bool   `json:"add-current-year"`
+				RemoveLogLevel bool   `json:"remove-log-level"`
+				RemoveDate     bool   `json:"remove-date"`
+			} `json:"todo"`
+		} `json:"consolidate"`
 	} `json:"actions"`
 }
+
+//type Config struct {
+//	Elasticsearch struct {
+//		Host                    string `json:"host"`
+//		RequiredStatus          string `json:"required_status"`
+//		MaxNumberOfPendingTasks int    `json:"max_number_of_pending_tasks"`
+//	} `json:"elasticsearch"`
+//	Log struct {
+//		Verbose bool `json:"verbose"`
+//	} `json:"log"`
+//	Parser struct {
+//		DateFormat         string   `json:"date_format"`
+//		DateIndexLastChars int      `json:"date_index_last_chars"`
+//		Loglevels          []string `json:"loglevels"`
+//		Logtypes           []string `json:"logtypes"`
+//		Ignorelist         []string `json:"ignorelist"`
+//	} `json:"parser"`
+//	Actions struct {
+//		Delete struct {
+//			Enabled bool `json:"enabled"`
+//			DryRun  bool `json:"dry_run"`
+//			Todo    []struct {
+//				Loglevel string `json:"loglevel"`
+//				KeepDays int    `json:"keep-days"`
+//				Logtype  string `json:"logtype,omitempty"`
+//			} `json:"todo"`
+//		} `json:"delete"`
+//	} `json:"actions"`
+//}
 
 // Cluster is the cluster details data structure
 // Set verbose true if you want more output details.

@@ -39,7 +39,7 @@ func init() {
 }
 
 func PrintClusterInfo() {
-	var clStatus, err = elastic.GetClusterStatus(singleton.GetConfig().Elasticsearch.Host, singleton.GetConfig().Log.Verbose)
+	var clStatus, err = elastic.GetClusterStatus(singleton.GetConfig().Elasticsearch.Host)
 	if err != "" {
 		log.Panicln(err)
 	}
