@@ -153,3 +153,42 @@ Reindexes index data into a new index name or to an existing index.
 This option does not delete the original index, if you want to rename an existing index you should reindex to the new name and then delete the original index after verify that everything was reindexed to the new one.
 
 This option is also useful if you changed the matching index template and you need to reindex the index to meet the new one.
+
+### CONSOLIDATE
+
+Usage: elasticman consolidate
+
+Reindexes index data into a new configured consolidation destination index.
+This option deletes the original index after reindex all the documents to the destination index.
+
+You need to provide the necessary consolidation configuration at the config.json file.
+
+Example:
+
+```
+{
+(...)
+"actions": {
+    (...)
+    "consolidate": {
+            "enabled": true,
+            "dry_run": false,
+            "delete_source_index": true,
+            "todo": [
+                {
+                    "loglevel": "info",
+                    "keep-days": 1,
+                    "logtype": "evt",
+                    "add-suffix": "all",
+                    "add-current-month": true,
+                    "add-current-year": true,
+                    "remove-log-level": true,
+                    "remove-date": true,
+                    "remove-last-no-of-chars": 0
+                }
+            ]
+        }
+    }
+}
+
+```
