@@ -1,0 +1,106 @@
+{
+    "elasticsearch": {
+        "host": "http://<server>:9200",
+        "required_status": "green",
+        "max_number_of_pending_tasks": 0
+    },
+    "log": {
+        "verbose": true
+    },
+    "parser": {
+        "date_format": "YYYY.MM.DD",
+        "date_index_last_chars": 10,
+        "loglevels": [
+            "debug",
+            "trace",
+            "verbose",
+            "info",
+            "warn",
+            "warning",
+            "error",
+            "critical",
+            "severe",
+            "fatal"
+        ],
+        "logtypes": [
+            "log",
+            "evt",
+            "orders",
+            "metric"
+        ],
+        "ignorelist": [
+            "trash",
+            "^.kibana[a-zA-Z0-9_.]*$",
+            "kibana_backup",
+            "logstash",
+            ".*(-all)$"
+        ]
+    },
+    "actions": {
+        "delete": {
+            "enabled": true,
+            "dry_run": false,
+            "todo": [
+                {
+                    "loglevel": "debug",
+                    "keep-days": 2
+                },
+                {
+                    "loglevel": "trace",
+                    "keep-days": 2
+                },
+                {
+                    "loglevel": "verbose",
+                    "keep-days": 2
+                },
+                {
+                    "loglevel": "info",
+                    "keep-days": 7,
+                    "logtype": "log"
+                },
+                {
+                    "loglevel": "warn",
+                    "keep-days": 14
+                },
+                {
+                    "loglevel": "warning",
+                    "keep-days": 14
+                },
+                {
+                    "loglevel": "critical",
+                    "keep-days": 60
+                },
+                {
+                    "loglevel": "severe",
+                    "keep-days": 60
+                },
+                {
+                    "loglevel": "fatal",
+                    "keep-days": 60
+                },
+                {
+                    "loglevel": "error",
+                    "keep-days": 60
+                }
+            ]
+        } 
+        "consolidate": {
+            "enabled": true,
+            "dry_run": false,
+            "delete_source_index": true,
+            "todo": [
+                {
+                    "loglevel": "info",
+                    "keep-days": 1,
+                    "logtype": "evt",
+                    "add-suffix": "all",
+                    "add-current-month": true,
+                    "add-current-year": true,
+                    "remove-log-level": true,
+                    "remove-date": true,
+                    "remove-last-no-of-chars": 0
+                }
+            ]
+        }   
+    }
+}

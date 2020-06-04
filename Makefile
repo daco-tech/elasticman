@@ -1,7 +1,16 @@
-all: deps run
+all: deps build
 
 deps:
 	@dep ensure
 
-run:
+build:
+	@go build
+
+install: 
+	@go install
+
+run: 
 	@go run main.go
+
+clean: 
+	rm -f ./main && rm -f ./elasticman

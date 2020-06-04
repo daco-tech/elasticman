@@ -15,6 +15,8 @@ import (
 )
 
 var cfgFile string
+var verbose bool
+var ConfirmAll bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -49,11 +51,13 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("verbose", "v", false, "Sets verbose output to true (overrides configuration)")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Sets verbose output to true (overrides configuration)")
+	rootCmd.PersistentFlags().BoolVarP(&ConfirmAll, "yes", "y", false, "Do not ask to confirm actions (Assume Y at all)")
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+
 	if cfgFile == "" {
 		usr, userErr := user.Current()
 		if userErr != nil {
@@ -64,7 +68,12 @@ func initConfig() {
 	log.Println("--> Loading Configs from " + cfgFile + "...")
 	config, cfgErr := general.LoadConfiguration(cfgFile)
 	if cfgErr != nil {
-		log.Fatalln("No configuration file found. Looking for '" + cfgFile + "'.")
+		log.Fatalf("Error opening file: %v. Using file "+cfgFile, cfgErr)		
 	}
 	singleton.SetConfig(config)
+
+	if !verbose {
+		verbose = config.Log.Verbose
+	}
+	singleton.SetVerbose(verbose)
 }

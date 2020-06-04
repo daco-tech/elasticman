@@ -1,5 +1,6 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5f66fc949da24d148b2b7bb274d347e4)](https://www.codacy.com/manual/daco-tech/elasticman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=daco-tech/elasticman&amp;utm_campaign=Badge_Grade) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdaco-tech%2Felasticman.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdaco-tech%2Felasticman?ref=badge_shield)
-![](https://github.com/daco-tech/elasticman/workflows/ElasticMan-Build/badge.svg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5f66fc949da24d148b2b7bb274d347e4)](https://www.codacy.com/manual/daco-tech/elasticman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=daco-tech/elasticman&amp;utm_campaign=Badge_Grade) ![](https://github.com/daco-tech/elasticman/workflows/ElasticMan-Build/badge.svg)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdaco-tech%2Felasticman.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdaco-tech%2Felasticman?ref=badge_shield)
+
 
 # ElasticMan - Elastic Maintenance Tool
 
@@ -13,10 +14,14 @@ The intent of this tool it's not to compete with ElasticSearch Curator, that is 
 
 ### From Source
 
+*   Make sure you have an apropriate golang development environment
 *   Make sure you have [dep](https://github.com/golang/dep) installed
 *   Clone this repo `git clone https://github.com/daco-tech/elasticman.git`
 *   Create a configuration file with name: config.json at main.go file level with the text in the config section
-*   Run `make` to download dependencies and run the application
+*   Run `make` to download dependencies and build the application (./elasticman binary file is created)
+*   Run `make install` to install app on the go bin environment
+*   Run `make run` (after run `make` or `make dep`) to run from source
+
 
 ## Config
 
@@ -112,7 +117,25 @@ You can override this path by passing -c or --config option (i.e.: elasticman --
                     "keep-days": 60
                 }
             ]
-        }
+        } 
+        "consolidate": {
+            "enabled": true,
+            "dry_run": false,
+            "delete_source_index": true,
+            "todo": [
+                {
+                    "loglevel": "info",
+                    "keep-days": 1,
+                    "logtype": "evt",
+                    "add-suffix": "all",
+                    "add-current-month": true,
+                    "add-current-year": true,
+                    "remove-log-level": true,
+                    "remove-date": true,
+                    "remove-last-no-of-chars": 0
+                }
+            ]
+        }   
     }
 }
 ```
@@ -154,5 +177,42 @@ This option does not delete the original index, if you want to rename an existin
 
 This option is also useful if you changed the matching index template and you need to reindex the index to meet the new one.
 
-## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdaco-tech%2Felasticman.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdaco-tech%2Felasticman?ref=badge_large)
+### CONSOLIDATE
+
+Usage: elasticman consolidate
+
+Reindexes index data into a new configured consolidation destination index.
+This option deletes the original index after reindex all the documents to the destination index.
+
+You need to provide the necessary consolidation configuration at the config.json file.
+
+Example:
+
+```
+{
+(...)
+"actions": {
+    (...)
+    "consolidate": {
+            "enabled": true,
+            "dry_run": false,
+            "delete_source_index": true,
+            "todo": [
+                {
+                    "loglevel": "info",
+                    "keep-days": 1,
+                    "logtype": "evt",
+                    "add-suffix": "all",
+                    "add-current-month": true,
+                    "add-current-year": true,
+                    "remove-log-level": true,
+                    "remove-date": true,
+                    "remove-last-no-of-chars": 0
+                }
+            ]
+        }
+    }
+}
+
+```
+

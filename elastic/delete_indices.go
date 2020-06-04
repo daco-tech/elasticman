@@ -41,7 +41,7 @@ func DeleteIndex(index string) bool {
 		if general.HasPrefix(resp.Status, "200") {
 			return true
 		}
-		if singleton.GetConfig().Log.Verbose {
+		if singleton.GetVerbose() {
 			log.Println("response Status : ", resp.Status)
 			log.Println("response Headers : ", resp.Header)
 			log.Println("response Body : ", string(respBody))
@@ -88,7 +88,7 @@ func DeleteByDays(parsedIndices []types.Index, days int, logtype string, logleve
 		if deletedIndices > 0 {
 			text = "Deleted Indexes (" + loglevel + "): " + strconv.Itoa(deletedIndices)
 		} else {
-			if singleton.GetConfig().Log.Verbose {
+			if singleton.GetVerbose() {
 				text = "Nothing deleted (" + loglevel + ")!"
 			}
 		}

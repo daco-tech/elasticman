@@ -43,3 +43,10 @@ func SetConfig(config general.Config) {
 func GetConfig() general.Config {
 	return instance["config"].(general.Config)
 }
+
+func SetVerbose(verbose bool) {
+	instance["verbose"] = verbose
+}
+func GetVerbose() bool {
+	return instance["verbose"].(bool)
+}

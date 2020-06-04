@@ -6,7 +6,6 @@ import (
 )
 
 // LoadConfiguration Loads the configuration file to the Config type.
-// Set verbose true if you want more output details.
 func LoadConfiguration(filename string) (Config, error) {
 	var config Config
 	configFile, err := os.Open(filename)
