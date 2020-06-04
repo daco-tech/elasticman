@@ -29,6 +29,7 @@ The intent of this tool it's not to compete with ElasticSearch Curator, that is 
 
 *   Ensure that you have docker installed and running
 *   Make sure that you have docker-compose installed
+*   Edit `docker-compose.yml` file to ensure that you map the config file and set the command you want to run (replace clusterInfo with the command you want)
 *   Run `make docker`
 
 
