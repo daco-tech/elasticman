@@ -17,5 +17,5 @@ clean:
 
 docker:
 	@dep ensure
-	@go build
+	@env GOOS=linux GOARCH=amd64 go build
 	@docker-compose up --build --force-recreate
