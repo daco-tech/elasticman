@@ -200,7 +200,7 @@ You need to provide the necessary consolidation configuration at the config.json
 
 Example:
 
-```
+``` json
 {
 (...)
 "actions": {
