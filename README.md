@@ -12,16 +12,27 @@ The intent of this tool it's not to compete with ElasticSearch Curator, that is 
 
 ## Getting started
 
-### From Source
+### Prepare
 
 *   Make sure you have an apropriate golang development environment
 *   Make sure you have [dep](https://github.com/golang/dep) installed
 *   Clone this repo `git clone https://github.com/daco-tech/elasticman.git`
 *   Create a configuration file with name: config.json at main.go file level with the text in the config section
+
+### From Source
+
 *   Run `make` to download dependencies and build the application (./elasticman binary file is created)
 *   Run `make install` to install app on the go bin environment
 *   Run `make run` (after run `make` or `make dep`) to run from source
 
+### Using docker
+
+*   Ensure that you have docker installed and running
+*   Make sure that you have docker-compose installed
+*   Run `make docker`
+
+
+-------
 
 ## Config
 

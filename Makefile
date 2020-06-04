@@ -13,4 +13,9 @@ run:
 	@go run main.go
 
 clean: 
-	rm -f ./main && rm -f ./elasticman
+	@rm -f ./main && rm -f ./elasticman
+
+docker:
+	@dep ensure
+	@go build
+	@docker-compose up
