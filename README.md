@@ -112,7 +112,25 @@ You can override this path by passing -c or --config option (i.e.: elasticman --
                     "keep-days": 60
                 }
             ]
-        }
+        } 
+        "consolidate": {
+            "enabled": true,
+            "dry_run": false,
+            "delete_source_index": true,
+            "todo": [
+                {
+                    "loglevel": "info",
+                    "keep-days": 1,
+                    "logtype": "evt",
+                    "add-suffix": "all",
+                    "add-current-month": true,
+                    "add-current-year": true,
+                    "remove-log-level": true,
+                    "remove-date": true,
+                    "remove-last-no-of-chars": 0
+                }
+            ]
+        }   
     }
 }
 ```
