@@ -68,7 +68,7 @@ func initConfig() {
 	log.Println("--> Loading Configs from " + cfgFile + "...")
 	config, cfgErr := general.LoadConfiguration(cfgFile)
 	if cfgErr != nil {
-		log.Fatalln("No configuration file found. Looking for '" + cfgFile + "'.")
+		log.Fatalf("Error opening file: %v. Using file "+cfgFile, cfgErr)		
 	}
 	singleton.SetConfig(config)
 
