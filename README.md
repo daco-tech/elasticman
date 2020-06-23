@@ -1,3 +1,4 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/daco-tech/elasticman)](https://goreportcard.com/report/github.com/daco-tech/elasticman)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5f66fc949da24d148b2b7bb274d347e4)](https://www.codacy.com/manual/daco-tech/elasticman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=daco-tech/elasticman&amp;utm_campaign=Badge_Grade) ![](https://github.com/daco-tech/elasticman/workflows/ElasticMan-Build/badge.svg)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdaco-tech%2Felasticman.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdaco-tech%2Felasticman?ref=badge_shield)
 
